@@ -1,1 +1,512 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta name="robots" content="noindex, nofollow">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-H0XQ5R3HGQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-H0XQ5R3HGQ');
+</script>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Call Live Site</title>
+    <link rel="stylesheet" href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        let popupOpen = false; // Track if the popup is open
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Redirect URL
+            const redirectUrl = '/49pay/';
+
+            // Save the current state to prevent the user from going back
+            window.history.pushState(null, null, window.location.href);
+
+            // Listen for the popstate event, triggered when the back button is clicked
+            window.onpopstate = function(event) {
+                if (popupOpen) {
+                    closePopup(); // Close the popup if it's open
+                } else {
+                    window.location.href = redirectUrl; // Redirect if the popup is closed
+                }
+            };
+        });
+
+        function openPopup(profileName) {
+            document.getElementById('selectedProfileName').textContent = profileName;
+            document.getElementById('videoCallPopup').style.display = 'flex';
+            document.getElementById('callVideo').play(); // Play the video on opening the popup
+            window.history.pushState(null, null, window.location.href); // Push state when opening popup
+            popupOpen = true; // Mark the popup as open
+        }
+
+        function closePopup() {
+            document.getElementById('videoCallPopup').style.display = 'none';
+            document.getElementById('callVideo').pause(); // Pause the video on closing popup
+            popupOpen = false; // Mark the popup as closed
+        }
+
+        document.addEventListener('click', function(event) {
+            if (event.target.matches('#popupClose') || event.target.matches('#videoCallPopup')) {
+                closePopup(); // Close popup when clicking outside or on the close button
+            }
+        });
+
+        // Prevent navigation when clicking the video call button
+        function preventNavigation(event) {
+            event.preventDefault();
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #E5DDD5; /* WhatsApp chat-like background */
+            color: black;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 100px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            background-color: #075E54;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .header img {
+            width: 40px;
+            height: auto;
+        }
+    .scroll-text {
+            width: 100%;
+            background-color: #128C7E;
+            color: white;
+            font-size: 18px;
+            padding: 10px 0;
+            position: fixed;
+            top: 60px;
+            z-index: 11;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .scroll-text span {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll 10s linear infinite;
+            padding-left: 1%;
+        }
+
+        @keyframes scroll {
+            from {
+                transform: translateX(10%);
+            }
+            to {
+                transform: translateX(-30%);
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            width: 100%;
+            margin-top: 20px; /* Adjusted to accommodate scroller */
+        }
+
+
+        .profile-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+            position: relative; /* For positioning the online/busy badge */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 220px;
+            margin-bottom: 15px;
+            max-width: 100%;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-card img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            border: 4px solid #25D366;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.6);
+        }
+
+        .profile-card h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .profile-card p {
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .call-btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #25D366, #128C7E);
+            color: white;
+            font-size: 16px;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .call-btn:hover {
+            background: linear-gradient(90deg, #128C7E, #075E54);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .call-btn i {
+            margin-right: 8px;
+        }
+
+        /* Blinking "Online" badge */
+        .online-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #25D366;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* "Busy" badge */
+        .busy-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #FF0000;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        /* "Online 5 min ago" badge */
+        .offline-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #FF8C00;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 20px;
+            background-color: #075E54;
+            color: white;
+            text-align: center;
+            width: 100%;
+        }
+
+        .footer h3 {
+            margin-bottom: 10px;
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .payment-methods img {
+            width: 50px;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .profile-card {
+                width: 90%;
+                max-width: 300px;
+                margin: 10px auto;
+            }
+
+            .profile-card img {
+                width: 160px;
+                height: 160px;
+            }
+
+            .profile-card h2 {
+                font-size: 20px;
+            }
+
+            .profile-card p {
+                font-size: 14px;
+            }
+
+            .call-btn {
+                font-size: 16px;
+                padding: 12px 35px;
+            }
+
+            .payment-methods img {
+                width: 40px;
+            }
+        }
+
+/* Pop-up styles */
+.popup-overlay {
+    display: none; /* Initially hidden */
+    position: fixed; /* Positioning to cover the entire screen */
+    top: 0; /* Align to top */
+    left: 0; /* Align to left */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    z-index: 1000; /* On top of everything */
+    justify-content: center; /* Center the content */
+    align-items: center; /* Center the content */
+}
+
+.popup-content {
+    background: white; /* White background for the popup */
+    padding: 20px; /* Padding around the content */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center; /* Center text */
+    max-width: 90%; /* Max width for responsiveness */
+    width: 100%; /* Full width */
+    position: relative; /* Relative positioning for child elements */
+    overflow: hidden; /* Hide overflow to prevent layout issues */
+}
+
+.popup-content video {
+    width: 100%; /* Full width of the popup */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 400px; /* Set a max height to prevent overflow */
+    border-radius: 10px; /* Rounded corners for video */
+    margin-bottom: 15px; /* Space below video */
+}
+
+.popup-close {
+    position: absolute; /* Position the close button absolutely */
+    top: 10px; /* Adjust the top position */
+    right: 20px; /* Adjust the right position */
+    font-size: 24px; /* Size of close button */
+    color: #000; /* Color for close button */
+    cursor: pointer; /* Change cursor to pointer */
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+.popup-content h2 {
+    margin-bottom: 10px; /* Space below heading */
+    font-size: 18px; /* Font size for heading */
+}
+
+.popup-content p {
+    font-size: 16px; /* Font size for paragraph */
+    margin-bottom: 20px; /* Space below paragraph */
+}
+
+.pay-btn {
+    display: inline-flex; /* Use flex to align icon and text */
+    align-items: center; /* Center vertically */
+    background: linear-gradient(90deg, #25D366, #128C7E);
+    color: white;
+    font-size: 24px;
+    padding: 10px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.pay-btn i {
+    margin-right: 10px; /* Space between icon and text */
+    font-size: 20px; /* Icon size */
+}
+
+.pay-btn:hover {
+    background: linear-gradient(90deg, #128C7E, #075E54); /* Change background on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+}
+
+      
+      
+/* Responsive pop-up for mobile */
+@media (max-width: 768px) {
+    .popup-content {
+        max-width: 90%; /* Full width on mobile */
+    }
+
+    .popup-content h2 {
+        font-size: 16px; /* Smaller font size for heading */
+    }
+
+    .popup-content p {
+        font-size: 14px; /* Smaller font size for paragraph */
+    }
+
+    .pay-btn {
+        font-size: 20px; /* Smaller font size for button */
+        padding: 10px 25px; /* Adjust padding for button */
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="../../upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Video Call">
+    </div>
+
+    <div class="scroll-text">
+        <span>Video Call your City's Hot and Sexy Girls | 100% Genuine | 100% Trusted | Satisfaction Guaranteed | Video Call with Sexy Girls</span>
+    </div>
+
+    <div class="container">
+        <!-- JavaScript will populate these profiles -->
+    </div>
+
+    <!-- Pop-up for Video Call -->
+    <div class="popup-overlay" id="videoCallPopup" style="display: none;">
+        <div class="popup-content">
+            <video autoplay="" muted="" playsinline="" loop="" id="callVideo">
+                <source src="../videopop.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="popup-close" id="popupClose">×</div>
+            <h2>💋 Video Call Full Nude Sex ₹99 Only 💋💋</h2>
+            <p id="selectedProfileName">Profile Name</p>
+            <h2>💋 सिर्फ़ 99 का पेमेंट करके मेरे साथ लाइव वीडियो कॉल पर सेक्स करे! 💦  </h2>
+           <div id="KbN1vn6l05">
+<a href="upi://pay?ver=01&mode=19&pa=ccpay.4315812377564000@icici&pn=PoojaOnline&tr=RZPP71BOkXxpwhukoqrv2&cu=INR&mc=5945&qrMedium=04&tn=PaymenttoPooja&am=99.00" class="pay-btn"> <i class="fab fa-whatsapp"></i> Pay and Start Video Call</a>
+</div>        </div>
+    </div>
+
+    <div class="footer">
+        <h3>Secure Payment Options</h3>
+        <div class="payment-methods">
+            <img src="../../cdn.icon-icons.com/icons2/730/PNG/512/paytm_icon-icons.com_62778.png" alt="Paytm">
+            <img src="../../static.vecteezy.com/system/resources/previews/049/116/753/original/phonepe-app-icon-transparent-background-free-png.png" alt="PhonePe">
+            <img src="../../static.wikia.nocookie.net/logopedia/images/4/47/Google_Pay_2018_icon.svg" alt="Google Pay">
+            <img src="../../v.hdfcbank.com/content/dam/hdfc-aem-microsites/htdocs/common/saving-account/images/upi_pg/banner.png" alt="UPI">
+        </div>
+    </div>
+
+    <script>
+        const profiles = [
+            { name: "Aisha Khan", img: "/images/thumb7.png", online: true },
+            { name: "Meera Patel", img: "/images/vc15.png", online: false },
+            { name: "Simran Kaur", img: "/images/vc11.png", online: true },
+            { name: "Neha Gupta", img: "/images/vc5.png", online: true },
+            { name: "Riya Singh", img: "/images/vc6.png", online: false },
+            { name: "Kajal Mehta", img: "/images/vc2.png", online: true },
+            { name: "Pooja Rani", img: "/images/vc4.png", online: false },
+            { name: "Tanisha Roy", img: "/images/vc13.png", online: true },
+            { name: "Sakshi Yadav", img: "/images/vc16.png", online: false },
+            { name: "Aditi Sharma", img: "/images/vc17.png", online: true }
+        ];
+
+        const nearbyCities = ["Gurgaon", "Noida", "Faridabad", "Ghaziabad", "Meerut"];
+
+        async function getCityByIP() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                const cityName = data.city || "Delhi";
+                return cityName;
+            } catch (error) {
+                console.error("Error fetching city name: " + error);
+                return "Unknown City";
+            }
+        }
+
+        async function initializeProfiles() {
+            const userCity = await getCityByIP();
+            const container = document.querySelector('.container');
+            let profileCities = [];
+
+            for (let i = 0; i < profiles.length; i++) {
+                let city;
+                if (i < 6) { // 60% of profiles get the user's city
+                    city = userCity;
+                } else { // 40% get random nearby cities
+                    city = nearbyCities[Math.floor(Math.random() * nearbyCities.length)];
+                }
+                profileCities.push(city);
+            }
+
+            profiles.forEach((profile, index) => {
+                const badgeClass = getOnlineStatus();
+
+                const profileCard = document.createElement('div');
+                profileCard.classList.add('profile-card');
+                profileCard.innerHTML = `
+                    <img src="${profile.img}" alt="${profile.name}">
+                    <div class="${badgeClass}">${badgeClass === 'online-badge' ? 'Online' : badgeClass === 'busy-badge' ? 'Busy' : '5 min ago'}</div>
+                    <h2>${profile.name}</h2>
+                    <p class="city">${profileCities[index]}</p>
+                    <a href="#" class="call-btn" onclick="openPopup('${profile.name}'); preventNavigation(event);"><i class="fab fa-whatsapp"></i> Video Call</a>
+                `;
+                container.appendChild(profileCard);
+            });
+        }
+
+        function getOnlineStatus() {
+            const randomNum = Math.random();
+            if (randomNum < 0.15) {
+                return 'busy-badge'; // 15% chance of "Busy"
+            } else if (randomNum < 0.30) {
+                return 'offline-badge'; // 15% chance of "Online 5 min ago"
+            } else {
+                return 'online-badge'; // Remaining 70% chance of "Online"
+            }
+        }
+
+        window.onload = initializeProfiles;
+    </script>
+
+
+</body></html>
